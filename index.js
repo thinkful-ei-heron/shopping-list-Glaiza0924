@@ -1,3 +1,5 @@
+'use strict';
+
 const store = {
   items: [
     { id: cuid(), name: 'apples', checked: false },
@@ -19,16 +21,94 @@ const generateItemElement = function (item) {
   return `
     <li class='js-item-element' data-item-id='${item.id}'>
       ${itemTitle}
+      <input class ='editItem'></input>
       <div class='shopping-item-controls'>
         <button class='shopping-item-toggle js-item-toggle'>
           <span class='button-label'>check</span>
+        </button>
+        <button class='shopping-item-edit js-edit-item'>
+          <span class='button-label'>edit</span>
         </button>
         <button class='shopping-item-delete js-item-delete'>
           <span class='button-label'>delete</span>
         </button>
       </div>
+      <div class='edit-controls'>
+        <button class='btn-cancel'>
+          <span class='button-label'>Cancel</span>
+        </button>
+        <button class='btn-update'>
+          <span class='button-label'>Update</span>
+        </button>
+      </div>
     </li>`;
+
 };
+
+//Start for Edit
+
+const handleItemEditClicked = function () {
+  $('.js-shopping-list').on('click', '.js-edit-item', event => {
+    const id = getItemIdFromElement(event.currentTarget);
+    editItemClicked(id, event.currentTarget);  
+  });
+};
+
+const editItemClicked = function (id, currentTarget) {
+  const selectedHTML = $(currentTarget).parent().prev()[0];
+  $(selectedHTML).replaceWith("<input name=newItem> </input>");
+  const selectedEditControls = $(currentTarget).parent().next()[0];
+  const selectedControls = $(currentTarget).parent();
+  $(selectedEditControls).show();
+  $(selectedControls).hide();
+
+  const cancelEdit = $(currentTarget).parent();
+  $(cancelEdit).hide();
+
+  const itemName = $(currentTarget).parent().prev().prev();
+  $(itemName).hide();
+};
+
+
+const handleCancelButton= function () {
+  $('.js-shopping-list').on('click', '.btn-cancel', event => {
+    const selectedEditControls = $(event.currentTarget).parent();
+    const selectControls = $(event.currentTarget).parent().prev();
+
+    $(selectedEditControls).hide();
+    $(selectControls).show();
+
+    const hideInput = $(event.currentTarget).parent().prev().prev();
+    $(hideInput).hide();
+
+    const showName = $(event.currentTarget).parent().prev().prev().prev();
+    $(showName).show();
+  });
+};
+
+handleCancelButton();
+
+const updateItem = function (id) {
+  const index = store.items.findIndex(item => item.id === id);
+  console.log( `index ${index}`);
+  
+  
+};
+
+const handleUpdateItem= function () {
+  $('.js-shopping-list').on('click', '.btn-update', event => {
+    
+    const id = getItemIdFromElement(event.currentTarget);
+    console.log(`Update button ${id}`);
+    // Delete the item.
+    updateItem(id);
+    // Render the updated shopping list.
+    render();
+  });
+};
+handleUpdateItem();
+
+//End for Edit
 
 const generateShoppingItemsString = function (shoppingList) {
   const items = shoppingList.map((item) => generateItemElement(item));
@@ -127,6 +207,7 @@ const handleDeleteItemClicked = function () {
   });
 };
 
+
 /**
  * Toggles the store.hideCheckedItems property
  */
@@ -160,6 +241,7 @@ const handleShoppingList = function () {
   handleItemCheckClicked();
   handleDeleteItemClicked();
   handleToggleFilterClick();
+  handleItemEditClicked();
 };
 
 // when the page loads, call `handleShoppingList`
