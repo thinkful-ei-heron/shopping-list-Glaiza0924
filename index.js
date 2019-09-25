@@ -54,7 +54,7 @@ const handleItemEditClicked = function () {
   });
 };
 
-const editItemClicked = function (currentTarget) {
+const editItemClicked = function (id, currentTarget) {
   const selectedHTML = $(currentTarget).parent().prev()[0];
   $(selectedHTML).replaceWith("<input name=newItem> </input>");
   const selectedEditControls = $(currentTarget).parent().next()[0];
@@ -90,7 +90,7 @@ handleCancelButton();
 
 const updateItem = function (id) {
   const index = store.items.findIndex(item => item.id === id);
-  console.log( `index ${index}`);
+  //console.log( `index ${index}`);
   
   
 };
