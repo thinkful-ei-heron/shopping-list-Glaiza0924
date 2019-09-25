@@ -54,7 +54,7 @@ const handleItemEditClicked = function () {
   });
 };
 
-const editItemClicked = function (id, currentTarget) {
+const editItemClicked = function (currentTarget) {
   const selectedHTML = $(currentTarget).parent().prev()[0];
   $(selectedHTML).replaceWith("<input name=newItem> </input>");
   const selectedEditControls = $(currentTarget).parent().next()[0];
